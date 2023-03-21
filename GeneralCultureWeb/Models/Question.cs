@@ -7,5 +7,15 @@ namespace GeneralCultureWeb.Models
 {
     public class Question
     {
+        //prop is a shortcut for a getter and setter
+        public int Id { get; set; }
+        public string Quest { get; set; }
+        public int Answer { get; set; }
+        //ctor shortcut for the constructor
+        //Timestamp 24:20
+        public Question()
+        {
+            
+        }
     }
 }
