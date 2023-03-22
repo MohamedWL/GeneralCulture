@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GeneralCultureWeb.Data;
 using GeneralCultureWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GeneralCultureWeb.Controllers
 {
@@ -25,6 +26,21 @@ namespace GeneralCultureWeb.Controllers
               return _context.Question != null ? 
                           View(await _context.Question.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Question'  is null.");
+        }
+
+        public async Task<IActionResult> ShowSearchForm()
+        {
+            return _context.Question != null ?
+                        View() :
+                        Problem("Entity set 'ApplicationDbContext.Question'  is null.");
+        }
+
+        //POST: Questions/ShowSearchResults
+        public async Task<IActionResult> ShowSearchResults(String SearchPhrase)
+        {
+            return _context.Question != null ?
+                        View("Index",await _context.Question.Where( j => j.Quest.Contains(SearchPhrase)).ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Question'  is null.");
         }
 
         // GET: Questions/Details/5
@@ -46,6 +62,7 @@ namespace GeneralCultureWeb.Controllers
         }
 
         // GET: Questions/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +71,7 @@ namespace GeneralCultureWeb.Controllers
         // POST: Questions/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Quest,Answer")] Question question)
@@ -68,6 +86,7 @@ namespace GeneralCultureWeb.Controllers
         }
 
         // GET: Questions/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Question == null)
@@ -86,6 +105,7 @@ namespace GeneralCultureWeb.Controllers
         // POST: Questions/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Quest,Answer")] Question question)
@@ -119,6 +139,7 @@ namespace GeneralCultureWeb.Controllers
         }
 
         // GET: Questions/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Question == null)
@@ -137,6 +158,7 @@ namespace GeneralCultureWeb.Controllers
         }
 
         // POST: Questions/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
